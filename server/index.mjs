@@ -33,7 +33,9 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, {
       "Content-Type": mime[ext] || "application/octet-stream",
       "Content-Length": body.length,
-      "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=31536000, immutable",
+      "Cache-Control": pathname === "/sw.js" ? "no-store"
+        : [".html", ".js", ".css", ".webmanifest"].includes(ext) ? "no-cache"
+        : "public, max-age=31536000, immutable",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "strict-origin-when-cross-origin",
       "X-Frame-Options": "DENY",
@@ -48,5 +50,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
-  process.stdout.write(`XYP3RN Music available on port ${port}\n`);
+  process.stdout.write(`XYP3RN Music available on port ${server.address().port}\n`);
 });
