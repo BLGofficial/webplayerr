@@ -15,7 +15,7 @@
   </head>
   <body>
     <div class="boot-screen" id="bootScreen" aria-live="polite">
-      <video class="boot-orb" autoplay muted loop playsinline poster="/assets/app-icon-512.png">
+      <video class="boot-orb" muted loop playsinline preload="metadata" poster="/assets/app-icon-512.png">
         <source src="/assets/idle-orb.mp4" type="video/mp4" />
       </video>
       <div class="boot-brand">XYP3RN<span> MUSIC SYSTEM</span></div>
@@ -89,11 +89,15 @@
             </div>
             <div class="orb-stage" id="orbStage" aria-label="Audio visualizer. Gold orb is idle; violet orb reacts to playback.">
               <div class="orb-radial" aria-hidden="true"></div>
-              <video class="idle-orb" id="idleOrb" autoplay muted loop playsinline poster="/assets/app-icon-512.png" aria-hidden="true">
+              <video class="idle-orb" id="idleOrb" muted loop playsinline preload="metadata" poster="/assets/app-icon-512.png" aria-hidden="true">
                 <source src="/assets/idle-orb.mp4" type="video/mp4" />
               </video>
               <div class="active-orb" id="activeOrb" aria-hidden="true">
-                <img src="/assets/active-orb-reference.jpg" alt="" />
+                <video id="activeOrbVideo" muted loop playsinline preload="metadata" poster="/assets/active-orb-poster.jpg" disablepictureinpicture tabindex="-1">
+                  <source src="/assets/active-orb.webm" type="video/webm" />
+                  <source src="/assets/active-orb.mp4" type="video/mp4" />
+                </video>
+                <img id="activeOrbPoster" src="/assets/active-orb-poster.jpg" alt="" hidden />
                 <canvas id="visualizerCanvas"></canvas>
               </div>
               <span class="orb-caption" id="orbCaption"><i></i> STANDBY / GOLD</span>
@@ -211,6 +215,6 @@
       <p class="dialog-foot">READ-ONLY DRIVE ACCESS <span>·</span> NO PUBLIC LINKS</p>
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="/app.js" defer></script>
+    <script src="/app.js" type="module"></script>
   </body>
 </html>

@@ -190,9 +190,11 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .orb-radial { position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(202,150,45,.095), rgba(28,21,8,.05) 44%, transparent 70%); filter: blur(12px); transition: background .7s ease; }
 .hero.is-playing .orb-radial { background: radial-gradient(circle, rgba(106,93,255,.18), rgba(16,109,143,.07) 47%, transparent 72%); }
 .idle-orb { position: absolute; width: min(70%, 420px); max-height: 300px; object-fit: contain; mix-blend-mode: screen; filter: drop-shadow(0 22px 36px rgba(240,185,66,.12)); transition: opacity .4s ease, transform .8s ease; }
-.active-orb { position: absolute; display: grid; place-items: center; width: min(82%, 450px); aspect-ratio: 1.42; opacity: 0; transform: scale(.9); transition: opacity .35s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
-.active-orb img { position: absolute; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: screen; filter: saturate(1.08) contrast(1.08) drop-shadow(0 13px 38px rgba(119,93,255,.17)); transform: scale(var(--orb-scale, 1)); transition: transform .22s ease-out; }
-.active-orb canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.active-orb { position: absolute; display: grid; place-items: center; width: min(82%, 450px); aspect-ratio: 1.42; opacity: 0; mix-blend-mode: screen; transform: scale(.9); transition: opacity .35s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+.active-orb video, .active-orb img { position: absolute; width: 100%; height: 100%; object-fit: cover; filter: saturate(var(--orb-saturation, 1.08)) contrast(1.08) brightness(var(--orb-brightness, 1)) drop-shadow(0 0 var(--orb-glow, 16px) rgba(119,93,255,.24)); transform: scale(var(--orb-scale, 1)); transition: transform .16s ease-out, filter .2s ease-out; }
+.active-orb video, .active-orb img { -webkit-mask-image: radial-gradient(ellipse 62% 68% at 50% 48%, #000 48%, transparent 100%); mask-image: radial-gradient(ellipse 62% 68% at 50% 48%, #000 48%, transparent 100%); }
+.active-orb video[hidden], .active-orb img[hidden] { display: none; }
+.active-orb canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .65; }
 .hero.is-playing .idle-orb { opacity: 0; transform: scale(.88); pointer-events: none; }
 .hero.is-playing .active-orb { opacity: 1; transform: scale(1); }
 .orb-caption { position: absolute; z-index: 3; bottom: 5px; display: flex; align-items: center; gap: 7px; color: #616161; font-size: 6px; letter-spacing: .14em; }
