@@ -12,7 +12,7 @@ const mime = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8", ".webmanifest": "application/manifest+json; charset=utf-8",
   ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
-  ".mp4": "video/mp4", ".ttf": "font/ttf", ".ico": "image/x-icon",
+  ".mp4": "video/mp4", ".webm": "video/webm", ".ttf": "font/ttf", ".ico": "image/x-icon",
 };
 
 const server = createServer(async (req, res) => {

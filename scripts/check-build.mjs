@@ -10,7 +10,8 @@ const required = [
   "api/config.js", "api/tracks.js", "api/auth/callback.js", "api/auth/google.js",
   "api/auth/logout.js", "api/auth/status.js", "api/drive/[id].js",
   "lib/api.mjs", "server/index.mjs", "data/tracks.seed.json",
-  "public/index.html", "public/app.js", "public/app.css", "public/sw.js",
+  "public/index.html", "public/app.js", "public/orb-motion.js", "public/app.css", "public/sw.js",
+  "public/assets/active-orb.mp4", "public/assets/active-orb.webm", "public/assets/active-orb-poster.jpg",
   "public/manifest.webmanifest"
 ];
 for (const file of required) assert.ok(await exists(file), `Missing required project file: ${file}`);

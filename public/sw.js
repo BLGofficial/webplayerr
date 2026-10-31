@@ -1,17 +1,18 @@
-const CACHE_NAME = "xyp3rn-music-shell-v2";
+const CACHE_NAME = "xyp3rn-music-shell-v3";
 const CACHE_PREFIX = "xyp3rn-music-shell-";
 const SHELL = [
   "/",
   "/app.css",
   "/app.js",
+  "/orb-motion.js",
   "/manifest.webmanifest",
-  "/assets/active-orb-reference.jpg",
+  "/assets/active-orb-poster.jpg",
   "/assets/app-icon-192.png",
   "/assets/app-icon-512.png",
   "/assets/fonts/Unbounded-VF.ttf",
   "/assets/fonts/OFL.txt"
 ];
-const REVALIDATE = new Set(["/", "/index.html", "/app.css", "/app.js", "/manifest.webmanifest"]);
+const REVALIDATE = new Set(["/", "/index.html", "/app.css", "/app.js", "/orb-motion.js", "/manifest.webmanifest"]);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -27,6 +28,9 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== "GET" || url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+  // Let the browser own media range requests. The small poster is cached for
+  // offline/error fallback; multi-megabyte loops are not forced into the shell.
+  if (/^\/assets\/(?:idle-orb|active-orb)\.(?:mp4|webm)$/.test(url.pathname)) return;
 
   // Do not let an old service worker pin old application code after a deploy.
   if (REVALIDATE.has(url.pathname) || request.mode === "navigate") {

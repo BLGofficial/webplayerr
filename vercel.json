@@ -37,6 +37,10 @@
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     },
     {
+      "source": "/orb-motion.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    },
+    {
       "source": "/app.css",
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     },

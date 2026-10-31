@@ -31,7 +31,11 @@ test("local server serves the app and API while keeping server-only files privat
     ["/sw.js", "text/javascript", "no-store"],
     ["/manifest.webmanifest", "application/manifest+json", "no-cache"],
     ["/assets/app-icon-192.png", "image/png", "immutable"],
-    ["/assets/idle-orb.mp4", "video/mp4", "immutable"]
+    ["/orb-motion.js", "text/javascript", "no-cache"],
+    ["/assets/idle-orb.mp4", "video/mp4", "immutable"],
+    ["/assets/active-orb.mp4", "video/mp4", "immutable"],
+    ["/assets/active-orb.webm", "video/webm", "immutable"],
+    ["/assets/active-orb-poster.jpg", "image/jpeg", "immutable"]
   ]) {
     const response = await fetch(origin + path);
     assert.equal(response.status, 200, path);

@@ -63,7 +63,10 @@ async function worker(t, online) {
 test("service worker revalidates app code and preserves an offline shell", async (t) => {
   const sw = await worker(t, true);
   assert.equal(await (await sw.request("/app.js").response).text(), "network:/app.js");
-  assert.equal(await sw.stores.get("xyp3rn-music-shell-v2").get("/app.js").text(), "network:/app.js");
+  assert.equal(await sw.stores.get("xyp3rn-music-shell-v3").get("/app.js").text(), "network:/app.js");
+  assert.equal(await (await sw.request("/orb-motion.js").response).text(), "network:/orb-motion.js");
+  assert.ok(sw.stores.get("xyp3rn-music-shell-v3").has("/assets/active-orb-poster.jpg"));
+  assert.ok(!sw.stores.get("xyp3rn-music-shell-v3").has("/assets/active-orb.mp4"), "Do not download video during shell installation");
   assert.equal(sw.request("/api/tracks").handled, false, "Never cache authenticated API responses");
   assert.equal(sw.request("/api/drive/test-file").handled, false, "Never cache private audio");
   const offline = await worker(t, false);
@@ -71,9 +74,11 @@ test("service worker revalidates app code and preserves an offline shell", async
   assert.equal(await (await offline.request("/?connection=failed", "navigate").response).text(), "cached:/");
 });
 
-test("missing video is not replaced by cached HTML", async (t) => {
+test("video range requests bypass the shell cache", async (t) => {
   const sw = await worker(t, false);
-  const result = sw.request("/assets/idle-orb.mp4");
-  assert.equal(result.handled, true);
-  assert.equal((await result.response).type, "error");
+  for (const path of ["/assets/idle-orb.mp4", "/assets/active-orb.mp4", "/assets/active-orb.webm"]) {
+    const result = sw.request(path);
+    assert.equal(result.handled, false, `${path} is owned by the browser media stack`);
+    assert.equal(result.response, undefined);
+  }
 });

@@ -1,3 +1,5 @@
+import { createOrbMotion } from "./orb-motion.js";
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -11,6 +13,8 @@ const ui = {
   player: $("#playerDock"),
   idleOrb: $("#idleOrb"),
   activeOrb: $("#activeOrb"),
+  activeOrbVideo: $("#activeOrbVideo"),
+  activeOrbPoster: $("#activeOrbPoster"),
   canvas: $("#visualizerCanvas"),
   dialog: $("#connectDialog"),
   toast: $("#toast"),
@@ -35,6 +39,16 @@ const state = {
   seekDragging: false,
   favorites: readFavorites(),
 };
+
+const orbMotion = createOrbMotion({
+  activeVideo: ui.activeOrbVideo,
+  idleVideo: ui.idleOrb,
+  bootVideo: $(".boot-orb"),
+  poster: ui.activeOrbPoster,
+  container: ui.activeOrb,
+  onChange: scheduleVisualizer,
+});
+orbMotion.setReady(false);
 
 function readFavorites() {
   try { return new Set(JSON.parse(localStorage.getItem("xyp3rn-favorites") || "[]")); }
@@ -246,8 +260,18 @@ function sizeCanvas() {
   }
 }
 
+function scheduleVisualizer() {
+  cancelAnimationFrame(state.animationFrame);
+  state.animationFrame = 0;
+  if (orbMotion.shouldAnimate && state.analyser) {
+    state.animationFrame = requestAnimationFrame(drawVisualizer);
+  } else {
+    ui.canvas.getContext("2d")?.clearRect(0, 0, ui.canvas.width, ui.canvas.height);
+  }
+}
+
 function drawVisualizer() {
-  if (!state.playing || !state.analyser) return;
+  if (!orbMotion.shouldAnimate || !state.analyser) return;
   sizeCanvas();
   const canvas = ui.canvas;
   const ctx = canvas.getContext("2d");
@@ -299,9 +323,7 @@ function drawVisualizer() {
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
-  const imageScale = 1 + Math.min(.045, bass * .085);
-  ui.activeOrb.style.setProperty("--orb-scale", imageScale.toFixed(3));
-  ui.activeOrb.style.setProperty("--orb-energy", energy.toFixed(3));
+  orbMotion.setEnergy(bass, energy, performance.now());
   state.animationFrame = requestAnimationFrame(drawVisualizer);
 }
 
@@ -309,8 +331,7 @@ function setVisualState(playing) {
   state.playing = playing;
   ui.hero.classList.toggle("is-playing", playing);
   ui.player.classList.toggle("is-playing", playing);
-  if (playing) ui.idleOrb.pause();
-  else ui.idleOrb.play().catch(() => {});
+  orbMotion.setPlaying(playing);
   $("#heroStateText").textContent = playing ? "LIVE / AUDIO REACTIVE" : "SYSTEM READY";
   $("#orbCaption").innerHTML = playing ? "<i></i> LIVE SIGNAL / VIOLET" : "<i></i> STANDBY / GOLD";
   $("#playButton").setAttribute("aria-label", playing ? "Pause" : "Play");
@@ -319,13 +340,8 @@ function setVisualState(playing) {
   if (playing) {
     setupAudioGraph();
     if (state.audioContext?.state === "suspended") state.audioContext.resume().catch(() => {});
-    cancelAnimationFrame(state.animationFrame);
-    state.animationFrame = requestAnimationFrame(drawVisualizer);
-  } else {
-    cancelAnimationFrame(state.animationFrame);
-    const ctx = ui.canvas.getContext("2d");
-    if (ctx) ctx.clearRect(0, 0, ui.canvas.width, ui.canvas.height);
   }
+  scheduleVisualizer();
 }
 
 function updateSeekPaint() {
@@ -374,6 +390,7 @@ function togglePlayback() {
 function stopPlayback() {
   ui.audio.pause();
   try { ui.audio.currentTime = 0; } catch { /* Metadata may not have loaded yet. */ }
+  orbMotion.reset();
   setVisualState(false);
   $("#currentTime").textContent = "00:00";
   $("#seekBar").value = "0";
@@ -524,7 +541,7 @@ async function boot() {
   ui.loader.classList.add("is-done");
   ui.shell.classList.add("is-ready");
   ui.shell.setAttribute("aria-hidden", "false");
-  ui.idleOrb.play().catch(() => {});
+  orbMotion.setReady(true);
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
   if (new URLSearchParams(location.search).get("connected") === "1") showToast("Google Drive connected. Choose any track to start playback.");
   if (new URLSearchParams(location.search).get("connection") === "failed") showToast("Google Drive connection did not finish. Try again when ready.");

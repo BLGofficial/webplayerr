@@ -1,6 +1,6 @@
 # XYP3RN Music Webapp
 
-A private, mobile-first music PWA for the nine tracks in the XYP3RN Drive library. The gold orb is the idle/loading identity; the violet orb reacts to the Web Audio analyser during playback.
+A private, mobile-first music PWA for the nine tracks in the XYP3RN Drive library. The gold orb is the idle/loading identity; the supplied violet orb animation plays as a looping motion-graphics layer during playback, with audio-reactive scale, glow, and speed.
 
 ## Project layout
 
@@ -72,6 +72,16 @@ The build is intentionally a validation step, not a frontend bundler: it checks 
 The configuration pins Node.js 22, bundles the server-only fallback catalog, and allows up to 300 seconds for media transfers. It also prevents the service worker and unversioned app shell from being cached indefinitely. Runtime credentials are not needed to compile the static frontend, but Google and Supabase must be configured for live catalog/playback.
 
 No Google or Supabase credentials are embedded in the repair. The connected Vercel Git integration deploys branch previews automatically; merging pull request #1 into `main` triggers the normal production deployment. See `AUDIT.md` for the verified preview and remaining live-credential checks.
+
+## Violet motion graphic
+
+The active violet orb uses the supplied `IMG_6576.gif` animation, transcoded to a four-second, 800×600, 25 fps loop:
+
+- `public/assets/active-orb.webm` — VP9, preferred by supporting browsers (~0.47 MB).
+- `public/assets/active-orb.mp4` — H.264 fallback (~1.43 MB).
+- `public/assets/active-orb-poster.jpg` — first-frame poster and error/offline fallback (~0.08 MB).
+
+The original 14 MB GIF is not shipped. The videos are muted, inline, and loop only while music is playing; the Web Audio analyser adds subtle scale, glow, brightness, saturation, and playback-rate modulation. Pausing returns to the gold idle loop, stopping resets the violet loop, and hidden tabs, reduced-motion preferences, or video failure pause/replace the decorative motion. The service worker caches the poster but leaves video range requests to the browser.
 
 ## Data and access model
 
