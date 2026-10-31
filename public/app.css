@@ -391,10 +391,10 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   .hero-copy .overline { margin-bottom: 9px; font-size: 7px; }
   .hero-copy h1 { font-size: clamp(24px, 7vw, 33px); line-height: 1.16; }
   .hero-subcopy { margin-top: 8px; }
-  .hero-now { position: absolute; z-index: 4; right: 1px; bottom: 11px; left: 1px; max-width: 66%; margin: 0; padding-left: 8px; }
+  .hero-now { position: relative; max-width: 100%; margin: 16px 0 0; padding-left: 8px; }
   .hero-now strong { font-size: 8px; }
   .hero-track-meta { font-size: 7px; }
-  .orb-stage { min-height: 205px; margin-top: -7px; }
+  .orb-stage { min-height: 205px; margin-top: 8px; }
   .idle-orb { width: min(78%, 300px); }
   .active-orb { width: min(99%, 365px); }
   .orb-caption { bottom: 2px; font-size: 5px; }
