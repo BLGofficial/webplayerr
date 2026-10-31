@@ -71,7 +71,7 @@ The build is intentionally a validation step, not a frontend bundler: it checks 
 
 The configuration pins Node.js 22, bundles the server-only fallback catalog, and allows up to 300 seconds for media transfers. It also prevents the service worker and unversioned app shell from being cached indefinitely. Runtime credentials are not needed to compile the static frontend, but Google and Supabase must be configured for live catalog/playback.
 
-This repair does not change Google or Supabase credentials and does not itself publish a Vercel deployment. If the Git integration is connected, merging to the configured production branch triggers the normal deployment.
+No Google or Supabase credentials are embedded in the repair. The connected Vercel Git integration deploys branch previews automatically; merging pull request #1 into `main` triggers the normal production deployment. See `AUDIT.md` for the verified preview and remaining live-credential checks.
 
 ## Data and access model
 

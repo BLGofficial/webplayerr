@@ -26,6 +26,10 @@ Vercel rejected `api/**/*.js` because no matching API source files existed. The 
 
 ## Deployment status and remaining checks
 
-The repair is delivered on `arena/0ec2a638-webplayerr` for review and merge into `main`. Vercel is not connected to this session, so no authenticated Vercel deployment or production promotion was performed. The authenticated Vercel CLI build could not reach Vercel; the official builders were verified locally instead.
+The repair is delivered on `arena/0ec2a638-webplayerr` in [pull request #1](https://github.com/BLGofficial/webplayerr/pull/1), targeting `main`. The existing Vercel Git integration successfully deployed the repair commit (`ef5484d`) as a preview; GitHub reports `Vercel – webplayerr: Deployment has completed`.
 
-After the Git-triggered deployment, verify the production environment variables and exact Google OAuth callback URL, then sign in and test real Drive playback and seeking. Live Google/Supabase requests were not tested with production credentials. See `README.md` for the deployment settings and checklist.
+Preview: https://webplayerr-git-arena-0ec2-2fefc8-trajannthegreat-1646s-projects.vercel.app
+
+The Vercel app connector is not connected to this session, so no manual production promotion was performed and `main` remains unchanged. The authenticated Vercel CLI could not reach Vercel from the sandbox; verification used the official builders locally and the successful Git-triggered deployment reported by GitHub. The preview URL itself was not accessed from the sandbox.
+
+Merge the PR to trigger the normal production deployment. Then verify the production environment variables and exact Google OAuth callback URL, sign in, and test real Drive playback and seeking. Live Google/Supabase requests were not tested with production credentials. See `README.md` for the deployment settings and checklist.
