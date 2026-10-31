@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#080808" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="XYP3RN Music — a private, high-fidelity music library." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon-192.png" />
+    <link rel="apple-touch-icon" href="/assets/app-icon-192.png" />
+    <link rel="preload" href="/assets/fonts/Unbounded-VF.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="/app.css" />
+    <title>XYP3RN Music</title>
+  </head>
+  <body>
+    <div class="boot-screen" id="bootScreen" aria-live="polite">
+      <video class="boot-orb" autoplay muted loop playsinline poster="/assets/app-icon-512.png">
+        <source src="/assets/idle-orb.mp4" type="video/mp4" />
+      </video>
+      <div class="boot-brand">XYP3RN<span> MUSIC SYSTEM</span></div>
+      <div class="boot-meter"><i></i></div>
+      <p>PREPARING YOUR LISTENING SPACE</p>
+    </div>
+
+    <div class="app-shell" id="appShell" aria-hidden="true">
+      <aside class="sidebar glass-panel">
+        <a class="brand-lockup" href="#top" aria-label="XYP3RN Music home">
+          <img src="/assets/app-icon-192.png" alt="" class="brand-emblem" />
+          <span class="brand-copy"><strong>XYP3RN</strong><small>MUSIC</small></span>
+        </a>
+        <div class="sidebar-caption">YOUR SPACE</div>
+        <nav class="side-nav" aria-label="Main navigation">
+          <button class="nav-link active" data-scroll="libraryPanel" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h10" /></svg>
+            <span>Library</span><kbd>01</kbd>
+          </button>
+          <button class="nav-link" data-scroll="queuePanel" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 13v8m-4-4h8" /></svg>
+            <span>Up next</span><kbd id="navQueueCount">09</kbd>
+          </button>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-storage">
+          <div class="storage-head"><span class="status-light"></span><span>PRIVATE ARCHIVE</span></div>
+          <strong id="sidebarTrackCount">09 <small>tracks</small></strong>
+          <div class="storage-rule"><i></i></div>
+          <span class="storage-foot" id="catalogStatus">SUPABASE CATALOG</span>
+        </div>
+        <button class="sidebar-connect" id="sidebarConnect" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8m-4-4 4 4-4 4M4.5 5.5h15v13h-15z" /></svg>
+          <span>Drive access</span>
+          <span class="connect-dot" id="sidebarDriveDot"></span>
+        </button>
+        <div class="sidebar-version">XYP3RN / 01.00</div>
+      </aside>
+
+      <main class="main-content" id="top">
+        <header class="topbar">
+          <div class="mobile-brand"><img src="/assets/app-icon-192.png" alt="" /><span>XYP3RN</span></div>
+          <div class="breadcrumb"><span>LISTENING ROOM</span><b>/</b><span class="breadcrumb-current">LIBRARY</span></div>
+          <div class="top-actions">
+            <button class="icon-button install-button" id="installButton" type="button" hidden aria-label="Install app" title="Install app">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 17v3h14v-3" /></svg>
+            </button>
+            <button class="drive-button" id="driveButton" type="button">
+              <span class="drive-mark" aria-hidden="true">G</span>
+              <span id="driveButtonLabel">Connect Drive</span>
+              <i class="connect-dot" id="driveDot"></i>
+            </button>
+          </div>
+        </header>
+
+        <section class="hero glass-panel" aria-labelledby="heroHeading">
+          <div class="hero-topline">
+            <div class="hero-kicker"><span class="eyebrow-index">01</span><span>YOUR PERSONAL SOUND SPACE</span></div>
+            <div class="hero-state"><span class="state-pulse" id="statePulse"></span><span id="heroStateText">SYSTEM READY</span></div>
+          </div>
+          <div class="hero-main">
+            <div class="hero-copy">
+              <p class="overline">XYP3RN AUDIO ARCHIVE</p>
+              <h1 id="heroHeading">XYP3RN<br /><em>Music Archive.</em></h1>
+              <p class="hero-subcopy">Private playback. Full resolution.</p>
+              <div class="hero-now">
+                <span class="hero-now-label">NOW PLAYING</span>
+                <strong id="heroTrackTitle">Choose a track</strong>
+                <span class="hero-track-meta" id="heroTrackMeta">The room is yours.</span>
+              </div>
+            </div>
+            <div class="orb-stage" id="orbStage" aria-label="Audio visualizer. Gold orb is idle; violet orb reacts to playback.">
+              <div class="orb-radial" aria-hidden="true"></div>
+              <video class="idle-orb" id="idleOrb" autoplay muted loop playsinline poster="/assets/app-icon-512.png" aria-hidden="true">
+                <source src="/assets/idle-orb.mp4" type="video/mp4" />
+              </video>
+              <div class="active-orb" id="activeOrb" aria-hidden="true">
+                <img src="/assets/active-orb-reference.jpg" alt="" />
+                <canvas id="visualizerCanvas"></canvas>
+              </div>
+              <span class="orb-caption" id="orbCaption"><i></i> STANDBY / GOLD</span>
+            </div>
+          </div>
+          <div class="hero-bottomline">
+            <span>DESIGNED FOR DEEP LISTENING</span>
+            <div class="hero-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span>48 KHZ <b>·</b> STEREO</span>
+          </div>
+        </section>
+
+        <section class="library-layout">
+          <div class="library-panel glass-panel" id="libraryPanel">
+            <div class="section-heading">
+              <div>
+                <p class="overline">THE COLLECTION</p>
+                <h2>Your library <span id="libraryCount">09</span></h2>
+              </div>
+              <div class="library-tools">
+                <label class="search-field">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.2 4.2"/></svg>
+                  <input id="searchInput" type="search" placeholder="Find a track" autocomplete="off" aria-label="Search tracks" />
+                  <kbd>⌘ K</kbd>
+                </label>
+                <button class="filter-button" id="filterButton" type="button" aria-label="Toggle audio format filter" title="Toggle audio format filter">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4" /></svg><span id="filterLabel">ALL</span>
+                </button>
+              </div>
+            </div>
+            <div class="track-list-head"><span>TRACK / FILE</span><span>FORMAT</span><span>QUALITY</span><span>TIME</span><span></span></div>
+            <div class="track-list" id="trackList" aria-live="polite"></div>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-symbol">∅</span><strong>No tracks found</strong><span>Try another title or clear the format filter.</span>
+            </div>
+          </div>
+
+          <aside class="queue-panel glass-panel" id="queuePanel">
+            <div class="section-heading queue-heading">
+              <div><p class="overline">CONTINUOUS FLOW</p><h2>Up next</h2></div>
+              <span class="queue-count" id="queueCount">09 TRACKS</span>
+            </div>
+            <div class="queue-current">
+              <div class="queue-cover"><img src="/assets/app-icon-192.png" alt="" /></div>
+              <div class="queue-current-copy"><span>ON DECK</span><strong id="queueCurrentTitle">Choose a track</strong><small id="queueCurrentSub">XYP3RN MUSIC</small></div>
+              <span class="queue-live" id="queueLive" aria-label="Not playing"><i></i><i></i><i></i></span>
+            </div>
+            <div class="queue-list" id="queueList"></div>
+            <div class="queue-footer">
+              <span><i class="tiny-gold-dot"></i> PRIVATE DRIVE LIBRARY</span>
+              <span id="queueDuration">~ 00 MIN</span>
+            </div>
+          </aside>
+        </section>
+        <footer class="page-footer"><span>XYP3RN MUSIC</span><span>WHERE MUSIC SHAPES TECHNOLOGY</span><span id="footerClock">LOCAL ARCHIVE</span></footer>
+      </main>
+    </div>
+
+    <div class="player-dock glass-panel" id="playerDock" aria-label="Audio player">
+      <audio id="audio" preload="none"></audio>
+      <div class="player-track">
+        <div class="mini-art"><img src="/assets/app-icon-192.png" alt="" /></div>
+        <div class="player-track-copy"><strong id="playerTitle">Nothing playing</strong><span id="playerArtist">XYP3RN AUDIO ARCHIVE</span></div>
+        <button class="like-button" id="likeButton" type="button" aria-label="Mark track as a favorite" title="Favorite track">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 8.8c0 4.3-8.2 10-8.2 10s-8.2-5.7-8.2-10a4.2 4.2 0 0 1 8.2-1.6 4.2 4.2 0 0 1 8.2 1.6Z" /></svg>
+        </button>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="control-button secondary" id="previousButton" type="button" aria-label="Previous track" title="Previous track">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6 8 12l11 6z" /></svg>
+          </button>
+          <button class="control-button stop-control" id="stopButton" type="button" aria-label="Stop playback" title="Stop">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" /></svg>
+          </button>
+          <button class="control-button play-control" id="playButton" type="button" aria-label="Play" title="Play">
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5.5 11 6.5-11 6.5z" /></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" /></svg>
+          </button>
+          <button class="control-button secondary" id="nextButton" type="button" aria-label="Next track" title="Next track">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l11 6-11 6z" /></svg>
+          </button>
+        </div>
+        <div class="timeline">
+          <span class="time-label" id="currentTime">00:00</span>
+          <input id="seekBar" class="range-slider seek-slider" type="range" min="0" max="1000" value="0" aria-label="Seek" />
+          <span class="time-label" id="durationTime">00:00</span>
+        </div>
+      </div>
+      <div class="player-utilities">
+        <span class="quality-chip" id="qualityChip">HI-RES</span>
+        <button class="volume-icon" id="muteButton" type="button" aria-label="Mute audio" title="Mute">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Zm12-2a6 6 0 0 1 0 8m2.5-10.5a9.5 9.5 0 0 1 0 13" /></svg>
+        </button>
+        <input id="volumeBar" class="range-slider volume-slider" type="range" min="0" max="1" step="0.01" value="0.78" aria-label="Volume" />
+        <button class="icon-button queue-toggle" id="queueToggle" type="button" aria-label="Show queue" title="Show queue">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h10m3-2 3 2-3 2" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <dialog class="connect-dialog glass-panel" id="connectDialog" aria-labelledby="dialogTitle">
+      <button class="dialog-close" id="closeDialog" type="button" aria-label="Close dialog">×</button>
+      <div class="dialog-orb"><img src="/assets/app-icon-192.png" alt="" /></div>
+      <p class="overline">PRIVATE PLAYBACK</p>
+      <h2 id="dialogTitle">Connect your<br /><em>Drive library.</em></h2>
+      <p class="dialog-copy" id="dialogCopy">Sign in to Google to stream the private tracks in your XYP3RN archive. Your audio stays in Drive; playback streams through an authenticated connection.</p>
+      <div class="dialog-note" id="dialogSetupNote" hidden>
+        <span class="note-icon">i</span>
+        <span>OAuth setup is needed before playback. Add the Google web client credentials and Supabase server key from the setup guide, then restart the app.</span>
+      </div>
+      <a class="dialog-primary" id="googleConnectLink" href="/api/auth/google">
+        <span class="google-g">G</span><span>Continue with Google</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+      </a>
+      <p class="dialog-foot">READ-ONLY DRIVE ACCESS <span>·</span> NO PUBLIC LINKS</p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

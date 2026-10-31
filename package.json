@@ -1,0 +1,14 @@
+{
+  "name": "xyp3rn-music-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A private XYP3RN audio library PWA with Drive streaming and Supabase metadata.",
+  "scripts": {
+    "dev": "node server/index.mjs",
+    "start": "node server/index.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
